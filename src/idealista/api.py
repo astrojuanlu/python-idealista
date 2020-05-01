@@ -118,13 +118,26 @@ class Idealista:
         has_multimedia: Optional[bool] = None,
     ) -> Any:
         api_url = API_URL_TEMPLATE.format(country=country)
-        data = prepare_data(
-            country,
-            Operation(operation).value if operation is not None else operation,
+
+        operation_str = (
+            Operation(operation).value if operation is not None else operation
+        )
+        property_type_str = (
             PropertyType(property_type).value
             if property_type is not None
-            else property_type,
-            str(center) if center is not None else center,
+            else property_type
+        )
+        center_str = str(center) if center is not None else center
+        since_date_str = (
+            SinceDate(since_date).value if since_date is not None else since_date
+        )
+        sort_str = Sort(sort).value if sort is not None else sort
+
+        data = prepare_data(
+            country,
+            operation_str,
+            property_type_str,
+            center_str,
             distance,
             location_id,
             locale=locale,
@@ -132,11 +145,9 @@ class Idealista:
             num_page=num_page,
             max_price=max_price,
             min_price=min_price,
-            since_date=SinceDate(since_date).value
-            if since_date is not None
-            else since_date,
+            since_date=since_date_str,
             order=order,
-            sort=Sort(sort).value if sort is not None else sort,
+            sort=sort_str,
             ad_ids=ad_ids,
             has_multimedia=has_multimedia,
         )
