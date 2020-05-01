@@ -1,0 +1,28 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+dist-name = "python-idealista"
+module = "idealista"
+author = "Juan Luis Cano Rodríguez"
+author-email = "hello@juanlu.space"
+home-page = "https://github.com/astrojuanlu/python-idealista"
+classifiers = [
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)"
+]
+requires-python=">=3.8"
+requires = [
+    "attrs",
+    "requests",
+    "requests_oauthlib",
+]
+
+[tool.flit.metadata.requires-extra]
+dev = [
+    "black",
+    "flake8",
+    "mypy",
+    "pytest",
+    "pytest-cov",
+]
