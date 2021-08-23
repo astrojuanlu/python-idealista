@@ -18,10 +18,10 @@ TOKEN_URL = "https://api.idealista.com/oauth/token"
 API_URL_TEMPLATE = "https://api.idealista.com/3.5/{country}/search"
 
 
-@attr.s(kw_only=True, auto_attribs=True)
+@attr.define(kw_only=True)
 class Point:
-    latitude: float = attr.ib()
-    longitude: float = attr.ib()
+    latitude: float
+    longitude: float
 
     def __str__(self):
         return f"{self.latitude},{self.longitude}"
@@ -84,10 +84,10 @@ def prepare_data(
     return data
 
 
-@attr.s(auto_attribs=True)
+@attr.define
 class Idealista:
-    client_id: str = attr.ib()
-    token: dict[str, str | int] = attr.ib()
+    client_id: str
+    token: dict[str, str | int]
 
     @classmethod
     def authenticate(cls, client_id, client_secret):
