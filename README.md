@@ -1,5 +1,9 @@
 # python-idealista
 
+[![Documentation Status](https://readthedocs.org/projects/python-idealista/badge/?version=latest)](https://python-idealista.readthedocs.io/en/latest/?badge=latest)
+
+python-idealista is a Python library to interact with the Idealista API.
+
 ## Usage
 
 ```python
