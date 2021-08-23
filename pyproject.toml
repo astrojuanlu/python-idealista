@@ -26,6 +26,10 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+doc = [
+    "furo",
+    "myst-parser",
+]
 
 [project.urls]
 Source = "https://github.com/astrojuanlu/python-idealista"
