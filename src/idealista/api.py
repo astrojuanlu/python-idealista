@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Union
@@ -25,7 +27,7 @@ class Point:
         return f"{self.latitude},{self.longitude}"
 
 
-@lru_cache()
+@lru_cache
 def get_token(client_id, client_secret):
     auth = HTTPBasicAuth(client_id, client_secret)
     client = BackendApplicationClient(client_id=client_id)
@@ -35,10 +37,10 @@ def get_token(client_id, client_secret):
 
 
 def _prepare_location_data(
-    center: Optional[str] = None,
-    distance: Optional[float] = None,
-    location_id: Optional[str] = None,
-) -> Dict[str, Any]:
+    center: str | None = None,
+    distance: float | None = None,
+    location_id: str | None = None,
+) -> dict[str, Any]:
     if (center is None and distance is None and location_id is None) or (
         center is not None and distance is not None and location_id is not None
     ):
@@ -56,7 +58,7 @@ def _prepare_location_data(
     return location_data
 
 
-def _prepare_extra_data(**kwargs: Any) -> Dict[str, Any]:
+def _prepare_extra_data(**kwargs: Any) -> dict[str, Any]:
     return {key: value for key, value in kwargs.items() if value is not None}
 
 
@@ -64,11 +66,11 @@ def prepare_data(
     country: str,
     operation: str,
     property_type: str,
-    center: Optional[str] = None,
-    distance: Optional[float] = None,
-    location_id: Optional[str] = None,
-    **kwargs: Union[str, bool, float, List[int], None],
-) -> Dict[str, Union[str, bool, float]]:
+    center: str | None = None,
+    distance: float | None = None,
+    location_id: str | None = None,
+    **kwargs: str | bool | float | list[int] | None,
+) -> dict[str, str | bool | float]:
     base_data = {
         "country": country,
         "operation": operation,
@@ -78,14 +80,14 @@ def prepare_data(
     extra_data = _prepare_extra_data(**kwargs)
 
     # https://www.python.org/dev/peps/pep-0584/#d1-d2
-    data = {**base_data, **location_data, **extra_data}
+    data = base_data | location_data | extra_data
     return data
 
 
 @attr.s(auto_attribs=True)
 class Idealista:
     client_id: str = attr.ib()
-    token: Dict[str, Union[str, int]] = attr.ib()
+    token: dict[str, str | int] = attr.ib()
 
     @classmethod
     def authenticate(cls, client_id, client_secret):
@@ -103,19 +105,19 @@ class Idealista:
         country: str,
         operation: Operation,
         property_type: PropertyType,
-        center: Optional[Point] = None,
-        locale: Optional[str] = None,
-        distance: Optional[float] = None,
-        location_id: Optional[str] = None,
-        max_items: Optional[int] = None,
-        num_page: Optional[int] = None,
-        max_price: Optional[float] = None,
-        min_price: Optional[float] = None,
-        since_date: Optional[SinceDate] = None,
-        order: Optional[str] = None,
-        sort: Optional[Sort] = None,
-        ad_ids: Optional[List[int]] = None,
-        has_multimedia: Optional[bool] = None,
+        center: Point | None = None,
+        locale: str | None = None,
+        distance: float | None = None,
+        location_id: str | None = None,
+        max_items: int | None = None,
+        num_page: int | None = None,
+        max_price: float | None = None,
+        min_price: float | None = None,
+        since_date: SinceDate | None = None,
+        order: str | None = None,
+        sort: Sort | None = None,
+        ad_ids: list[int] | None = None,
+        has_multimedia: bool | None = None,
     ) -> Any:
         api_url = API_URL_TEMPLATE.format(country=country)
 
