@@ -1,13 +1,13 @@
-import attr
-from functools import lru_cache
 import logging
-from typing import List, Dict, Union, Optional, Any
+from functools import lru_cache
+from typing import Any, Dict, List, Optional, Union
 
+import attr
 from oauthlib.oauth2 import BackendApplicationClient
-from requests_oauthlib import OAuth2Session
 from requests.auth import HTTPBasicAuth
+from requests_oauthlib import OAuth2Session
 
-from .enums import PropertyType, SinceDate, Sort, Operation
+from .enums import Operation, PropertyType, SinceDate, Sort
 
 logger = logging.getLogger(__name__)
 
