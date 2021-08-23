@@ -29,6 +29,7 @@ dev = [
 doc = [
     "furo",
     "myst-parser",
+    "sphinx-copybutton",
 ]
 
 [project.urls]

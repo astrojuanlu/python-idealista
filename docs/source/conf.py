@@ -22,6 +22,7 @@ release = ".".join(version.split(".")[:2])
 
 extensions = [
     "myst_parser",
+    "sphinx_copybutton",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
