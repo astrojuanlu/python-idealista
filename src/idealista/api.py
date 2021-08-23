@@ -5,9 +5,8 @@ from functools import lru_cache
 from typing import Any, Dict, List, Optional, Union
 
 import attr
-from oauthlib.oauth2 import BackendApplicationClient
-from requests.auth import HTTPBasicAuth
-from requests_oauthlib import OAuth2Session
+import httpx
+from httpx_auth import OAuth2ClientCredentials
 
 from .enums import Operation, PropertyType, SinceDate, Sort
 
@@ -25,15 +24,6 @@ class Point:
 
     def __str__(self):
         return f"{self.latitude},{self.longitude}"
-
-
-@lru_cache
-def get_token(client_id, client_secret):
-    auth = HTTPBasicAuth(client_id, client_secret)
-    client = BackendApplicationClient(client_id=client_id)
-    oauth = OAuth2Session(client=client)
-    token = oauth.fetch_token(token_url=TOKEN_URL, auth=auth)
-    return token
 
 
 def _prepare_location_data(
@@ -87,20 +77,14 @@ def prepare_data(
 @attr.define
 class Idealista:
     client_id: str
-    token: dict[str, str | int]
+    auth: Any
 
     @classmethod
-    def authenticate(cls, client_id, client_secret):
-        token = get_token(client_id, client_secret)
-        logger.debug("Token: %s", token)
-        return cls(client_id, token)
+    async def authenticate(cls, client_id, client_secret):
+        auth = OAuth2ClientCredentials(TOKEN_URL, client_id=client_id, client_secret=client_secret)
+        return cls(client_id, auth)
 
-    @property
-    def client(self):
-        client = OAuth2Session(self.client_id, token=self.token)
-        return client
-
-    def search(
+    async def search(
         self,
         country: str,
         operation: Operation,
@@ -154,7 +138,10 @@ class Idealista:
             has_multimedia=has_multimedia,
         )
 
-        response = self.client.post(api_url, data=data)
-        response.raise_for_status()
+        logger.debug(data)
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(api_url, data=data, auth=self.auth)
+            response.raise_for_status()
 
         return response.json()

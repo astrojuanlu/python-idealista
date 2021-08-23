@@ -13,8 +13,8 @@ classifiers = [
 requires-python=">=3.9"
 dependencies = [
     "attrs",
-    "requests",
-    "requests_oauthlib",
+    "httpx",
+    "httpx-auth",
 ]
 dynamic = ["version", "description"]
 
